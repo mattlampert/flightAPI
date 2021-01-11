@@ -42,6 +42,7 @@ class SearchPageActivity : AppCompatActivity() {
         run(editText_iataCode.text.toString())
     }
 
+    // on va interroger l'API
     fun run(iataCode: String){
 
             val request = Request.Builder()
@@ -65,16 +66,13 @@ class SearchPageActivity : AppCompatActivity() {
 
                         println("la réponse est:$jsonBody")
 
+                        //conversion json->class avec gson
                         val gson = GsonBuilder().create()
-
-
                         val sType = object : TypeToken<List<FlightFeed>>() { }.type
 
-
-                        //on essaie de parser la réponse avec la class FlightFeed afin de voir
+                        //on essaie de convertir la réponse avec la class FlightFeed afin de voir
                         // si un vol existe bel est bien
                         try {
-
                             val flightFeed = gson.fromJson<List<FlightFeed>>(jsonBody, sType)
                         } catch (e: JsonSyntaxException){
                             // IllegalStateException
@@ -83,17 +81,11 @@ class SearchPageActivity : AppCompatActivity() {
                             return
                         }
 
-
                         val intent = Intent(this@SearchPageActivity, FlightMenuActivity::class.java)
                         intent.putExtra("flightObject",jsonBody)
                         startActivity(intent)
-
-
                     }
                 }
             })
         }
-
-
-
 }
